@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>AppLogin Conponent</p>
+    <p>AppHome Conponent</p>
   </div>
 </template>
 
