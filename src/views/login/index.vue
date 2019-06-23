@@ -18,7 +18,7 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button class="login-btn" type="primary" @onSubmit="onSubmit">登录</el-button>
+            <el-button class="login-btn" type="primary" @click="handleLogin">登录</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -43,8 +43,28 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    handleLogin () {
+      // consoele.log(111)
+      axios({
+        method: 'POST',
+        url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+        data: this.form
+      }).then(res => {
+        this.$message({
+          showClose: true,
+          message: '登陆成功',
+          type: 'success'
+        })
+        // 路由跳转，都是用name去跳转，路由传参方便
+        this.$router.push({
+          name: 'home'
+        })
+      }).catch(err => {
+        console.log(err)
+        if (err.response.status === 400) {
+          this.$message.error('登陆失败')
+        }
+      })
     },
     handleCode () {
       const { mobile } = this.form
@@ -58,20 +78,42 @@ export default {
         url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
       }).then(res => {
         const data = res.data.data
-        window.initGeetest({
-          // 以下配置参数来自服务端 SDK
-          gt: data.gt,
-          challenge: data.challenge,
-          offline: !data.success,
-          new_captcha: data.new_captcha,
-          product: 'bind'
-        }, (captchaObj) => {
-          this.captchaObj = captchaObj
-          captchaObj.onReady(function () {
-            captchaObj.verify()
-          })
-          // 这里可以调用验证实例 captchaObj 的实例方法
-        })
+        window.initGeetest(
+          {
+            // 以下配置参数来自服务端 SDK
+            gt: data.gt,
+            challenge: data.challenge,
+            offline: !data.success,
+            new_captcha: data.new_captcha,
+            product: 'bind'
+          }, (captchaObj) => {
+            this.captchaObj = captchaObj
+            captchaObj.onReady(() => {
+              captchaObj.verify()
+            }).onSuccess(() => {
+              console.dir(captchaObj.getValidate())
+              const {
+                geetest_challenge: challenge,
+                geetest_validate: validate,
+                geetest_seccode: seccode
+              } = captchaObj.getValidate()
+              axios({
+                method: 'GET',
+                url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${mobile}`,
+                params: {
+                  challenge,
+                  validate,
+                  seccode
+                }
+              }).then(res => {
+                console.log(res.data)
+              }).catch(error => {
+                console.log(error)
+              })
+            })
+            // 这里可以调用验证实例 captchaObj 的实例方法
+          }
+        )
       })
     }
   }
