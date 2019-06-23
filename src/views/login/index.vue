@@ -29,6 +29,8 @@
 <script>
 import axios from 'axios'
 
+import '@/vendor/gt'
+
 export default {
   name: 'AppLogin',
   data () {
@@ -36,7 +38,8 @@ export default {
       form: {
         mobile: '15076653737',
         code: ''
-      }
+      },
+      captchaObj: null
     }
   },
   methods: {
@@ -45,11 +48,30 @@ export default {
     },
     handleCode () {
       const { mobile } = this.form
+
+      if (this.captchaObj) {
+        return this.captchaObj.verify()
+      }
+
       axios({
         method: 'GET',
         url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
       }).then(res => {
-        console.log(res.data)
+        const data = res.data.data
+        window.initGeetest({
+          // 以下配置参数来自服务端 SDK
+          gt: data.gt,
+          challenge: data.challenge,
+          offline: !data.success,
+          new_captcha: data.new_captcha,
+          product: 'bind'
+        }, (captchaObj) => {
+          this.captchaObj = captchaObj
+          captchaObj.onReady(function () {
+            captchaObj.verify()
+          })
+          // 这里可以调用验证实例 captchaObj 的实例方法
+        })
       })
     }
   }
