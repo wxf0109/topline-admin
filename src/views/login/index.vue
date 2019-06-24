@@ -21,6 +21,10 @@
               <el-button @click="handleCode">获取验证码</el-button>
             </el-col>
           </el-form-item>
+          <el-form-item prop="checked">
+            <el-checkbox v-model="form.checked"></el-checkbox>
+            <span>我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私条款</a></span>
+          </el-form-item>
           <el-form-item>
             <el-button class="login-btn" type="primary" @click="handleLogin" :loading="loginLoading">登录</el-button>
           </el-form-item>
@@ -41,7 +45,8 @@ export default {
     return {
       form: {
         mobile: '15076653737',
-        code: ''
+        code: '',
+        checked: true
       },
       loginLoading: false,
       rules: {
@@ -52,6 +57,10 @@ export default {
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { min: 6, max: 6, message: '长度必须为6个字符', trigger: 'blur' }
+        ],
+        checked: [
+          { required: true, message: '请同意用户协议', trigger: 'change' },
+          { pattern: /true/, message: '请同意用户协议', trigger: 'change' }
         ]
       },
       captchaObj: null
@@ -161,6 +170,9 @@ export default {
   .login-form-wrap {
     background-color: #fff;
     padding: 50px;
+    .el-checkbox {
+      margin-right: 10px;
+    }
     .login-head {
       padding-bottom: 20px;
       display: flex;
