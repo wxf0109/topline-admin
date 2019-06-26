@@ -96,6 +96,7 @@ export default {
         url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
         data: this.form
       }).then(res => {
+        window.localStorage.setItem('user_Info', JSON.stringify(res.data.data))
         this.$message({
           showClose: true,
           message: '登陆成功',
@@ -103,7 +104,6 @@ export default {
         })
 
         this.loginLoading = false
-
         // 路由跳转，都是用name去跳转，路由传参方便
         this.$router.push({
           name: 'home'
