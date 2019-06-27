@@ -4,8 +4,8 @@
     <el-col :span="10">
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          <img width="30" src="userInfo.photo">
-          {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
+          <!-- <img width="30" src="userInfo.photo"> -->
+          {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>账户设置</el-dropdown-item>
@@ -25,7 +25,8 @@ export default {
     }
   },
   created () {
-    this.userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
+    this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
+    // console.log(userInfo)
   }
 }
 </script>

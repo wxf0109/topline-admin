@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import nprogress from 'nprogress'
 
 Vue.use(Router)
 
@@ -11,7 +12,7 @@ const router = new Router({
     //   component: () => import('@/views/home')
     // },
     {
-      name: 'home',
+      // name: 'home',
       path: '/',
       component: () => import('@/views/layout'),
       children: [
@@ -24,6 +25,11 @@ const router = new Router({
           name: 'publish',
           path: '/publish',
           component: () => import('@/views/publish')
+        },
+        {
+          name: 'article-list',
+          path: '/article',
+          component: () => import('@/views/article')
         }
       ]
     },
@@ -36,6 +42,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  nprogress.start()
   const userInfo = window.localStorage.getItem('user_Info')
   // 如果是非 /login 页面， 判断其登录状态
   if (to.path !== '/login') {
@@ -55,6 +62,10 @@ router.beforeEach((to, from, next) => {
       next()
     }
   }
+})
+
+router.afterEach((to, from) => {
+  nprogress.done()
 })
 
 export default router

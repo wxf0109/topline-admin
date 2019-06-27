@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 
 import '@/vendor/gt'
 
@@ -91,12 +91,12 @@ export default {
 
     login () {
       this.loginLoading = true
-      axios({
+      this.$http({
         method: 'POST',
-        url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+        url: '/authorizations',
         data: this.form
-      }).then(res => {
-        window.localStorage.setItem('user_Info', JSON.stringify(res.data.data))
+      }).then(data => {
+        window.localStorage.setItem('user_Info', JSON.stringify(data))
         this.$message({
           showClose: true,
           message: '登陆成功',
@@ -150,11 +150,11 @@ export default {
       // 初始化验证码时禁用按钮
       this.codeLoadging = true
 
-      axios({
+      this.$http({
         method: 'GET',
-        url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${this.form.mobile}`
-      }).then(res => {
-        const data = res.data.data
+        url: `/captchas/${this.form.mobile}`
+      }).then(data => {
+        // const data = res.data.data
         window.initGeetest(
           {
             // 以下配置参数来自服务端 SDK
@@ -180,15 +180,15 @@ export default {
                 geetest_validate: validate,
                 geetest_seccode: seccode
               } = captchaObj.getValidate()
-              axios({
+              this.$http({
                 method: 'GET',
-                url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${this.form.mobile}`,
+                url: `/sms/codes/${this.form.mobile}`,
                 params: {
                   challenge,
                   validate,
                   seccode
                 }
-              }).then(res => {
+              }).then(data => {
                 // 发送倒计时
                 this.codeCountDown()
               })
