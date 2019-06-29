@@ -16,13 +16,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="频道">
-                    <el-select v-model="filterParams.channel_id" placeholder="请选择活动区域">
-                    <el-option
-                    v-for="item in channels"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"></el-option>
-                    </el-select>
+                    <article-channel v-model="filterParams.channel_id"></article-channel>
                 </el-form-item>
                 <el-form-item label="时间">
                     <el-date-picker
@@ -76,7 +70,12 @@
                 <el-table-column
                 label="状态">
                     <template slot-scope="scope">
-                        <el-button type="success">修改</el-button>
+                        <el-button type="success" @click="$router.push({
+                          name: 'publish-edit',
+                          params: {
+                            id: scope.row.id
+                          }
+                        })">修改</el-button>
                     <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -96,9 +95,13 @@
     </div>
 </template>
 <script>
+import ArticleChannel from '@/components/article-channel'
 // const userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
 export default {
   name: '',
+  components: {
+    ArticleChannel
+  },
   data () {
     return {
       articles: [],
@@ -138,7 +141,6 @@ export default {
           label: '已删除'
         }
       ],
-      channels: [], // 频道列表
       filterParams: { // 文章查询条件参数
         status: '', // 文章状态
         channel_id: '', // 频道id
@@ -151,7 +153,6 @@ export default {
 
   created () {
     this.loadArticles()
-    this.loadChannels()
   },
 
   methods: {
@@ -183,15 +184,6 @@ export default {
         this.articles = data.results
         this.totalCount = data.total_count
         this.articleLoading = false
-      })
-    },
-
-    loadChannels () {
-      this.$http({
-        method: 'GET',
-        url: '/channels'
-      }).then(data => {
-        this.channels = data.channels
       })
     },
 
