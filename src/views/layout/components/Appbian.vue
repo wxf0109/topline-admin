@@ -29,7 +29,7 @@
             <i></i>
             <span slot="title">评论列表</span>
         </el-menu-item>
-        <el-menu-item index="2-4">
+        <el-menu-item index="/image">
             <i></i>
             <span slot="title">素材管理</span>
         </el-menu-item>

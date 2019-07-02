@@ -7,6 +7,7 @@ import 'nprogress/nprogress.css'
 import './style/index.less'
 import axios from 'axios'
 import JSONbig from 'json-bigint'
+import store from './store'
 
 // axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0/'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
@@ -70,5 +71,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

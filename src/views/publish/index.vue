@@ -99,7 +99,7 @@ export default {
       this.editLoading = true
       this.$http({
         method: 'GET',
-        url: `/articles/${this.articleId}`
+        url: `/articles/${this.$route.params.id}`
       }).then(data => {
         this.articleForm = data
         this.editLoading = false

@@ -70,12 +70,13 @@
                 <el-table-column
                 label="状态">
                     <template slot-scope="scope">
-                        <el-button type="success" @click="$router.push({
+                      <el-button type="success"  @click="$router.push(`/publish/${scope.row.id}`)">修改</el-button>
+                        <!-- <el-button type="success" @click="$router.push({
                           name: 'publish-edit',
                           params: {
                             id: scope.row.id
                           }
-                        })">修改</el-button>
+                        })">修改</el-button> -->
                     <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
